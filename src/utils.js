@@ -6,6 +6,16 @@ function render() {
     viewer.innerHTML = html;
 }
 
+function processUrl() {
+    if (window.location.search.length > 0) {
+        let decoded = decodeURI(window.location.search.slice(1));
+        document.getElementById("editor").innerHTML = decoded;
+        render();
+    } else {
+        render();
+    }
+}
+
 function scriptRender(html) {
     let indexSup = html.indexOf("^");
     let indexSub = html.indexOf("_");
