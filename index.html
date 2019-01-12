@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link
+    href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono|IBM+Plex+Sans"
+    rel="stylesheet" />
+    <script type="text/javascript" src="src/utils.js"></script>
+</head>
+<body>
+<div id="main">
+<textarea autofocus class="box" id="editor" oninput="render()">
+</textarea>
+<div class="box" id="viewer">
+</div>
+</div>
+<!-- post-processing -->
+<script type="text/javascript">
+    render();
+</script>
+</body>
+</html>

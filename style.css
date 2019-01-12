@@ -1,0 +1,76 @@
+html {
+    font-family: 'IBM Plex Mono', sans-serif;
+    font-size: 24px;
+    --green: #46B29D;
+    --blue: #3333cc;
+    --red: #DE5B49;
+    --lightGrey: #f2f2f2;
+    --night: #202060;
+    --pink: #ffb3ff;
+    --lightRed: #ff6666;
+}
+
+#main {
+    position: absolute;
+    width: 800px;
+    height: 400px;
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 3px;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.box {
+    position: absolute;
+    overflow-wrap: break-word;
+    overflow-y: auto;
+    width: 250px;
+    height: 350px;
+    border-style: solid;
+    padding: 20px;
+    border-radius: 3px;
+}
+
+#editor {
+    top: 50%;
+    left: 25%;
+    transform: translateX(-50%) translateY(-50%);
+    border-color: var(--lightRed);
+    background-color: var(--night);
+    color: var(--pink);
+}
+
+#viewer {
+    top: 50%;
+    left: 75%;
+    transform: translateX(-50%) translateY(-50%);
+    border-color: var(--green);
+    text-align: center;
+    background-color: var(--lightGrey);
+    font-weight: bold;
+    border-width:3px;
+}
+
+textarea {
+    width: 250px;
+    height: 350px;
+}
+
+.supsub {
+    display: inline-block;
+}
+
+.supsub sup,
+.supsub sub {
+    position: relative;
+    display: block;
+    font-size: .5em;
+    line-height: 1.2;
+    text-align: left;
+}
+
+.supsub sub {
+    top: .3em;
+}
