@@ -1,117 +1,240 @@
+/**
+ * renders the document on load
+ */
 function render() {
-    let html = document.getElementById("editor").value;
-    html = scriptRender(html);
-    html = html.replace(/[\n]/g, "<br/>");
-    let viewer = document.getElementById("viewer");
-    viewer.innerHTML = html;
+  const ta = document.getElementById('copy-link');
+  if (ta) {
+    document.body.removeChild(ta);
+  }
+  let html = document.getElementById('editor').value;
+  html = scriptRender(html);
+  html = html.replace(/[\n]/g, '<br/>');
+  html = processGreeks(html);
+  const viewer = document.getElementById('viewer');
+  viewer.innerHTML = html;
 }
 
+/**
+ * process greek letters
+ * @param {string} html
+ * @return {string}
+ */
+function processGreeks(html) {
+  let sComm = html.indexOf('\\');
+  let eComm = getCommandEnd(html, sComm);
+
+  while (sComm != -1) {
+    GREEKS.forEach(function(val) {
+      const greekify = '&' + html.slice(sComm + 1, eComm) + ';';
+      if (greekify == val) {
+        html = html.slice(0, sComm) + greekify + html.slice(eComm);
+      }
+    });
+    sComm = html.indexOf('\\', sComm + 1);
+    eComm = getCommandEnd(html, sComm);
+  }
+  return html;
+}
+
+/**
+ * returns the end of the next command string
+ * @param {string} html 
+ * @param {int} sComm
+ * @return {int}
+ */
+function getCommandEnd(html, sComm) {
+  const space = html.indexOf(' ', sComm + 1);
+  const slash = html.indexOf('\\', sComm + 1);
+  const tag = html.indexOf('<', sComm + 1);
+  const plus = html.indexOf('+', sComm+1);
+  const sub = html.indexOf('-', sComm + 1);
+  const mult = html.indexOf('*', sComm + 1);
+  const div = html.indexOf('/', sComm + 1);
+  const poss = [space, slash, tag, plus, sub, mult, div];
+  let eComm = html.length;
+  for (let i=0; i<poss.length; i++) {
+    if (poss[i] == -1) {
+      continue;
+    } else if (poss[i] < eComm) {
+      eComm = poss[i];
+    }
+  }
+
+  return eComm;
+}
+
+/**
+ * processes the url query string and renders it in the editor on load
+ */
 function processUrl() {
-    if (window.location.search.length > 0) {
-        let decoded = decodeURI(window.location.search.slice(1));
-        document.getElementById("editor").innerHTML = decoded;
-        render();
-    } else {
-        render();
-    }
+  if (window.location.search.length > 0) {
+    const decoded = decodeURIComponent(window.location.search.slice(1));
+    document.getElementById('editor').innerHTML = decoded;
+    render();
+  } else {
+    render();
+  }
 }
 
+/**
+ * Renders superscripts and subscripts for characters
+ * @param {string} html
+ * @return {string}
+ */
 function scriptRender(html) {
-    let indexSup = html.indexOf("^");
-    let indexSub = html.indexOf("_");
-    let newHtml = html;
-    while (indexSup + indexSub != -2) {
-        if (indexSup != -1 && (indexSup < indexSub || indexSub == -1)) {
-            newHtml = replaceScripts(newHtml, indexSup, "^");
-        } else if (indexSub != -1 && (indexSub < indexSup || indexSup == -1)) {
-            newHtml = replaceScripts(newHtml, indexSub, "_");
-        }
-        indexSup = newHtml.indexOf("^");
-        indexSub = newHtml.indexOf("_");
+  let indexSup = html.indexOf('^');
+  let indexSub = html.indexOf('_');
+  let newHtml = html;
+  while (indexSup + indexSub != -2) {
+    if (indexSup != -1 && (indexSup < indexSub || indexSub == -1)) {
+      newHtml = replaceScripts(newHtml, indexSup, '^');
+    } else if (indexSub != -1 && (indexSub < indexSup || indexSup == -1)) {
+      newHtml = replaceScripts(newHtml, indexSub, '_');
     }
-    return newHtml;
+    indexSup = newHtml.indexOf('^');
+    indexSub = newHtml.indexOf('_');
+  }
+  return newHtml;
 }
 
+/**
+ * Replaces latex script characters with html
+ * @param {string} newHtml
+ * @param {int} index
+ * @param {string} char
+ * @return {string}
+ */
 function replaceScripts(newHtml, index, char) {
-    let charBool = char == "_";
-    let stag =  charBool ? "<sub>" : "<sup>";
-    let etag = charBool ? "</sub>" : "</sup>";
-    let opp = charBool ? "^" : "_";
-    let pre = newHtml.slice(0, index);
-    let middle = "";
-    let post = "";
-    if (!checkDouble(newHtml, opp, index)) {
-        let res = scriptContents(newHtml, index);
-        if (res[1]) {
-            middle = stag + res[0] + etag;
-            post = newHtml.slice(res[1]);
-        } else {
-            middle = stag + etag;
-            post = res[0];
-        }
+  const charBool = char == '_';
+  const stag = charBool ? '<sub>' : '<sup>';
+  const etag = charBool ? '</sub>' : '</sup>';
+  const opp = charBool ? '^' : '_';
+  const pre = newHtml.slice(0, index);
+  let middle = '';
+  let post = '';
+  if (!checkDouble(newHtml, opp, index)) {
+    const res = scriptContents(newHtml, index);
+    if (res[1]) {
+      middle = stag + res[0] + etag;
+      post = newHtml.slice(res[1]);
     } else {
-        let spanStag = "<span class = 'supsub'>";
-        let spanEtag = "</span>";
-        let stag = charBool ? "<sub class='subscript'>" : "<sup class='superscript'>";
-        let oppStag = charBool ? "<sup class='superscript'>" : "<sub class='subscript'>";
-        let oppEtag = charBool ? "</sup>" : "</sub>";
-        let res = scriptContents(newHtml, index);
-        if (res[1]) {
-            middle = spanStag;
-            let str = stag + res[0] + etag;
-            let oppStr;
-            let oppRes = scriptContents(newHtml, res[1]);
-            if (oppRes[1]) {
-                oppStr = oppStag + oppRes[0] + oppEtag;
-                post = newHtml.slice(oppRes[1]);
-            } else {
-                oppStr = oppStag + oppEtag;
-                post = oppRes[0];
-            }
-
-            if (opp == "_") {
-                middle +=  str + oppStr + spanEtag;
-            } else {
-                middle += oppStr + str + spanEtag;
-            }
-        } else {
-            middle = spanStag + stag + etag + oppStag + oppEtag + spanEtag;
-            post = res[0];
-        }
+      middle = stag + etag;
+      post = res[0];
     }
-    newHtml = pre + middle + post;
-    return newHtml;
+  } else {
+    const spanStag = '<span class = \'supsub\'>';
+    const spanEtag = '</span>';
+    let stag;
+    let oppStag;
+    let oppEtag;
+    if (charBool) {
+      stag = '<sub class=\'subscript\'>';
+      oppStag = '<sup class=\'superscript\'>';
+      oppEtag = '</sup>';
+    } else {
+      stag = '<sup class=\'superscript\'>';
+      oppStag = '<sub class=\'subscript\'>';
+      oppEtag = '</sub>';
+    }
+    const res = scriptContents(newHtml, index);
+    if (res[1]) {
+      middle = spanStag;
+      const str = stag + res[0] + etag;
+      let oppStr;
+      const oppRes = scriptContents(newHtml, res[1]);
+      if (oppRes[1]) {
+        oppStr = oppStag + oppRes[0] + oppEtag;
+        post = newHtml.slice(oppRes[1]);
+      } else {
+        oppStr = oppStag + oppEtag;
+        post = oppRes[0];
+      }
+
+      if (opp == '_') {
+        middle += str + oppStr + spanEtag;
+      } else {
+        middle += oppStr + str + spanEtag;
+      }
+    } else {
+      middle = spanStag + stag + etag + oppStag + oppEtag + spanEtag;
+      post = res[0];
+    }
+  }
+  newHtml = pre + middle + post;
+  return newHtml;
 }
 
+/**
+ * checks if a character has a superscript and a subscript
+ * @param {string} html
+ * @param {string} opp
+ * @param {int} sInd
+ * @return {bool}
+ */
 function checkDouble(html, opp, sInd) {
-    if (html.slice(sInd+1, sInd+2) != "{") {
-        let chk = html.slice(sInd + 2, sInd + 3);
-        return chk == opp;
-    } else {
-        let end = html.indexOf("}", sInd);
-        if (end == -1) {
-            return false;
-        }
-        let chk = html.slice(end + 1, end + 2);
-        return chk == opp;
+  if (html.slice(sInd+1, sInd+2) != '{') {
+    const chk = html.slice(sInd + 2, sInd + 3);
+    return chk == opp;
+  } else {
+    const end = html.indexOf('}', sInd);
+    if (end == -1) {
+      return false;
     }
+    const chk = html.slice(end + 1, end + 2);
+    return chk == opp;
+  }
 }
 
+/**
+ * gets the content associated with each script character
+ * @param {string} html
+ * @param {int} index
+ * @return {[string, int]}
+ */
 function scriptContents(html, index) {
-    let nextChar = html.slice(index + 1, index + 2);
-    let indexEnd = index+2;
-    let ret;
-    if (nextChar != "{") {
-        ret = nextChar;
-    } else {
-        let endChar = html.indexOf("}", indexEnd);
-        if (endChar <= index + 1) {
-            return [html.slice(index+2)];
-        }
-        ret = html.slice(index+2, endChar);
-        indexEnd = endChar+1;
+  const nextChar = html.slice(index + 1, index + 2);
+  let indexEnd = index+2;
+  let ret;
+  if (nextChar != '{') {
+    ret = nextChar;
+  } else {
+    const endChar = html.indexOf('}', indexEnd);
+    if (endChar <= index + 1) {
+      return [html.slice(index+2)];
     }
-    return [ret, indexEnd];
+    ret = html.slice(index+2, endChar);
+    indexEnd = endChar+1;
+  }
+  return [ret, indexEnd];
 }
 
-// Σ <span class='supsub'><sup class='superscript'>n</sup><sub class='subscript'>i=1</sub></span> x<sub>i</sub>, σ <br>
+/**
+ * gets the tinified url from the server
+ */
+function getTiny() {
+  const text = document.getElementById('editor').value;
+  const href = window.location.href;
+  const currQuery = href.indexOf('?');
+  const longUrl = href.slice(0, currQuery) + '?' + encodeURIComponent(text);
+  const socket = io();
+  socket.emit('request', {
+    url: longUrl,
+  });
+  socket.on('response', function(data) {
+    const tinyUrl = data.tinyUrl;
+    displayUrl(tinyUrl);
+  });
+}
+
+/**
+ * places the tinified url in a text area
+ * @param {string} url
+ */
+function displayUrl(url) {
+  const textArea = document.createElement('textarea');
+  textArea.id = 'copy-link';
+  textArea.value = url;
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+}

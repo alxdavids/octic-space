@@ -74,3 +74,58 @@ textarea {
 .supsub sub {
     top: .3em;
 }
+
+#above {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    font-size: 30px;
+}
+
+#link-button {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+#footer {
+    font-size: 10px;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+button {
+    font-family: 'IBM Plex Mono', sans-serif;
+    font-size: 18px;
+    background-color: var(--pink);
+    border-radius: 8px;
+    width: 150px;
+    height: 30px;
+    border-style: solid;
+    border-color: var(--lightRed);
+}
+
+button:hover {
+    background-color: var(--lightRed);
+}
+
+#copy-link {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    font-size: 14px;
+    background-color: var(--night);
+    color: var(--pink);
+    border-radius: 8px;
+    width: 250px;
+    height: 20px;
+    padding: 20px;
+    border-style: solid;
+    border-color: var(--lightRed);
+    text-align: center;
+}

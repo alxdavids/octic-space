@@ -7,14 +7,27 @@
     <link
     href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono|IBM+Plex+Sans"
     rel="stylesheet" />
+    <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="src/utils.js"></script>
+    <script type="text/javascript" src="src/greek.js"></script>
 </head>
 <body>
+<div id="above">
+    octic-space
+</div>
 <div id="main">
 <textarea autofocus class="box" id="editor" oninput="render()">
 </textarea>
 <div class="box" id="viewer">
 </div>
+</div>
+<div id="link-button">
+    <button onclick="getTiny()" id="copy-button">
+        copy link!
+    </button>
+</div>
+<div id="footer">
+    <p>by &alpha;lxdavids</p>
 </div>
 <!-- post-processing -->
 <script type="text/javascript">

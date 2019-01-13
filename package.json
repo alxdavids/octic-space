@@ -1,0 +1,19 @@
+{
+  "name": "math-web",
+  "version": "1.0.0",
+  "description": "A website for displaying maths in a helpful way",
+  "main": "src/srvr/server.js",
+  "repository": "https://github.com/alxdavids/octic-space",
+  "author": "Alex Davidson <coela@alxdavids.xyz>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "express": "^4.16.4",
+    "request": "^2.88.0",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.12.0",
+    "eslint-config-google": "^0.11.0"
+  }
+}
