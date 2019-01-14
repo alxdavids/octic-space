@@ -8,10 +8,44 @@ function render() {
   }
   let html = document.getElementById('editor').value;
   html = scriptRender(html);
-  html = html.replace(/[\n]/g, '<br/>');
+  html = processLines(html);
+  html = processAlignment(html);
+  console.log(html);
   html = processGreeks(html);
   const viewer = document.getElementById('viewer');
   viewer.innerHTML = html;
+}
+
+/**
+ * processes the perceived alignment of each line
+ * @param {string} html
+ * @return {string}
+ */
+function processAlignment(html) {
+  let indexAlign = html.indexOf('<p>  ');
+  let indexEnd = html.indexOf('</p>', indexAlign);
+  while (indexAlign > -1 && indexEnd > indexAlign) {
+    const start = html.slice(0, indexAlign);
+    const middle = '<p><span class="align-right">'
+        + html.slice(indexAlign+3, indexEnd) + '</span><br/>';
+    const end = html.slice(indexEnd);
+    html = start + middle + end;
+    indexAlign = html.indexOf('<p>  ');
+    indexEnd = html.indexOf('</p>', indexAlign);
+  }
+  return html;
+}
+
+/**
+ * puts each line in a separate paragraph
+ * @param {string} html
+ * @return {string}
+ */
+function processLines(html) {
+  html = '<p>' + html;
+  html = html.replace(/[\n]/g, '</p><p>');
+  html += '</p>';
+  return html;
 }
 
 /**
@@ -38,7 +72,7 @@ function processGreeks(html) {
 
 /**
  * returns the end of the next command string
- * @param {string} html 
+ * @param {string} html
  * @param {int} sComm
  * @return {int}
  */
@@ -50,7 +84,11 @@ function getCommandEnd(html, sComm) {
   const sub = html.indexOf('-', sComm + 1);
   const mult = html.indexOf('*', sComm + 1);
   const div = html.indexOf('/', sComm + 1);
-  const poss = [space, slash, tag, plus, sub, mult, div];
+  const lbra = html.indexOf('(', sComm + 1);
+  const lsq = html.indexOf('[', sComm + 1);
+  const rbra = html.indexOf(')', sComm + 1);
+  const rsq = html.indexOf(']', sComm + 1);
+  const poss = [space, slash, tag, plus, sub, mult, div, lbra, lsq, rbra, rsq];
   let eComm = html.length;
   for (let i=0; i<poss.length; i++) {
     if (poss[i] == -1) {
@@ -223,6 +261,9 @@ function getTiny() {
   socket.on('response', function(data) {
     const tinyUrl = data.tinyUrl;
     displayUrl(tinyUrl);
+  });
+  socket.on('error', function(data) {
+    alert('An error occurred: ' + data.err);
   });
 }
 

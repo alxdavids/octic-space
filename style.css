@@ -1,6 +1,6 @@
 html {
     font-family: 'IBM Plex Mono', sans-serif;
-    font-size: 24px;
+    font-size: 18px;
     --green: #46B29D;
     --blue: #3333cc;
     --red: #DE5B49;
@@ -12,8 +12,7 @@ html {
 
 #main {
     position: absolute;
-    width: 800px;
-    height: 400px;
+    width: 100%;
     background-color: #FFFFFF;
     padding: 20px;
     border-radius: 3px;
@@ -34,20 +33,17 @@ html {
 }
 
 #editor {
-    top: 50%;
-    left: 25%;
-    transform: translateX(-50%) translateY(-50%);
+    position: relative;
+    float: left;
     border-color: var(--lightRed);
     background-color: var(--night);
     color: var(--pink);
 }
 
 #viewer {
-    top: 50%;
-    left: 75%;
-    transform: translateX(-50%) translateY(-50%);
+    position: relative;
+    float: right;
     border-color: var(--green);
-    text-align: center;
     background-color: var(--lightGrey);
     font-weight: bold;
     border-width:3px;
@@ -128,4 +124,15 @@ button:hover {
     border-style: solid;
     border-color: var(--lightRed);
     text-align: center;
+}
+
+.align-right {
+    float: right;
+}
+
+#anchor {
+    position: relative;
+    height: 1000px;
+    margin-left: auto;
+    margin-right: auto;
 }

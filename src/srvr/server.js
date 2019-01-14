@@ -10,13 +10,18 @@ const PORT = process.env.OCTIC_PORT || 8080;
 const API_KEY = process.env.OCTIC_API_KEY;
 
 app.use('/', express.static(__dirname + '/../../', options));
-console.log(__dirname + '../../');
 server.listen(PORT);
 
 io.on('connection', function(socket) {
   socket.on('request', function(data) {
     const longUrl = data.url;
-    tinify(socket, longUrl);
+    try {
+      tinify(socket, longUrl);
+    } catch (err) {
+      socket.emit('error', {
+        error: err,
+      });
+    }
   });
 });
 

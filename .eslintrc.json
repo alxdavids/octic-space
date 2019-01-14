@@ -6,6 +6,7 @@
     "globals": {
         "window": true,
         "document": true,
+        "alert": true,
         "processUrl": true,
         "getTiny": true,
         "io": true,
