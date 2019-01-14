@@ -4,7 +4,7 @@
 function render() {
   const ta = document.getElementById('copy-link');
   if (ta) {
-    document.body.removeChild(ta);
+    document.getElementById('link-button').removeChild(ta);
   }
   let html = document.getElementById('editor').value;
   html = scriptRender(html);
@@ -275,7 +275,7 @@ function displayUrl(url) {
   const textArea = document.createElement('textarea');
   textArea.id = 'copy-link';
   textArea.value = url;
-  document.body.appendChild(textArea);
+  document.getElementById('link-button').appendChild(textArea);
   textArea.focus();
   textArea.select();
 }
