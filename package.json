@@ -15,7 +15,7 @@
     "eslint-config-google": "^0.11.0"
   },
   "scripts": {
-    "start": "node src/srvr/server.js",
+    "build": "node src/srvr/server.js",
     "lint": "eslint .",
     "fix": "eslint . --fix"
   }
