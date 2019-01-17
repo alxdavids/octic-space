@@ -6,8 +6,8 @@ const request = require('request');
 
 const options = {};
 
-const PORT = process.env.OPENSHIFT_NODEJS_PORT || 8080;
-const SERVER_IP = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+const PORT = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
+const SERVER_IP = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 const API_KEY = process.env.OCTIC_API_KEY;
 
 app.use('/', express.static(__dirname + '/../../', options));
