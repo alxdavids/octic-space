@@ -10,7 +10,6 @@ function render() {
   html = scriptRender(html);
   html = processLines(html);
   html = processAlignment(html);
-  console.log(html);
   html = processGreeks(html);
   const viewer = document.getElementById('viewer');
   viewer.innerHTML = html;

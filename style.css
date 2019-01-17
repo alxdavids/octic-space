@@ -38,8 +38,9 @@ html {
     border-color: var(--lightRed);
     background-color: var(--night);
     color: var(--pink);
-    width: 80%;
+    width: 70%;
     height: 100%;
+    max-width: 300px;
     border-width: 2px;
     font-size: 16px;
 }
@@ -53,6 +54,7 @@ html {
     padding-left: 5px;
     width: 80%;
     height: 100%;
+    max-width: 350px;
 }
 
 .supsub {
@@ -117,7 +119,8 @@ button:hover {
     transform: translateX(-50%) translateY(-50%);
     display: inline-block;
     height: 80%;
-    width: 70%;
+    width: 60%;
+    max-width: 200px;
 }
 
 #copy-link {
@@ -130,8 +133,9 @@ button:hover {
     background-color: var(--night);
     color: var(--pink);
     border-radius: 8px;
-    width: 70%;
+    width: 60%;
     height: 80%;
+    max-width: 200px;
     border-style: solid;
     border-color: var(--lightRed);
     text-align: center;

@@ -6,11 +6,13 @@ const request = require('request');
 
 const options = {};
 
-const PORT = process.env.OCTIC_PORT || 8080;
+const PORT = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+const SERVER_IP = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 const API_KEY = process.env.OCTIC_API_KEY;
 
 app.use('/', express.static(__dirname + '/../../', options));
 server.listen(PORT);
+console.log('Listening on port ' + PORT + ' at ' + SERVER_IP);
 
 io.on('connection', function(socket) {
   socket.on('request', function(data) {
